@@ -2367,9 +2367,12 @@ textAngular.directive('textAngularToolbar', [
                  **/
                 scope.currentTab = '';
                 scope.changeTab = function (tab, element) {
-                    if(scope.currentTab == tab) scope.currentTab = '';
-                    else scope.currentTab = tab;
-
+                    if(scope.currentTab == tab) {
+                        scope.currentTab = '';
+                    }
+                    else {
+                        scope.currentTab = tab;
+                    }
                 };
 
                 var setupToolElement = function(toolDefinition, toolScope){
@@ -2417,7 +2420,7 @@ textAngular.directive('textAngularToolbar', [
 						if(toolDefinition.buttontext) toolElement[0].innerHTML = toolDefinition.buttontext;
 						// add the icon to the front of the button if there is content
 						if(toolDefinition.iconclass){
-							var icon = angular.element('<i>'), content = toolElement[0].innerHTML;
+							var icon = angular.element('<div>'), content = toolElement[0].innerHTML;
 							icon.addClass(toolDefinition.iconclass);
 							toolElement[0].innerHTML = '';
 							toolElement.append(icon);

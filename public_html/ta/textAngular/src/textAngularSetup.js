@@ -7,26 +7,28 @@ Version 1.3.0-pre15
 See README.md or https://github.com/fraywing/textAngular/wiki for requirements and use.
 */
 angular.module('textAngularSetup', [])
-	
+
 // Here we set up the global display defaults, to set your own use a angular $provider#decorator.
 .value('taOptions',  {
 	toolbar: [
-        ['text_tab', 'styling_tab'],
-		['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'pre', 'quote'],
-		['bold', 'italics', 'underline', 'strikeThrough', 'ul', 'ol', 'redo', 'undo', 'clear'],
-		['justifyLeft','justifyCenter','justifyRight','indent','outdent'],
-		['html', 'insertImage', 'insertLink', 'insertVideo', 'wordcount', 'charcount']
+        ['undo', 'redo'],
+        ['smiles', 'text', 'alignment', 'insertLink', 'insertImage'],
+        ["contentScreen", "increaseEditorHeight", "decreaseEditorHeight"],
+        /*['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'pre', 'quote'],
+        ['bold', 'italics', 'underline', 'strikeThrough', 'ul', 'ol', 'redo', 'undo', 'clear'],
+        ['justifyLeft','justifyCenter','justifyRight','indent','outdent'],
+        ['html', 'insertImage', 'insertLink', 'insertVideo', 'wordcount', 'charcount']*/
 	],
     //tab : '',
 	classes: {
 		focussed: "focussed",
-		toolbar: "btn-toolbar",
-		toolbarGroup: "btn-group",
-		toolbarButton: "btn btn-default",
+		toolbar: "g_toolbar",
+		toolbarGroup: "toolbar_group",
+		toolbarButton: "editor_button",
 		toolbarButtonActive: "active",
 		disabled: "disabled",
-		textEditor: 'form-control',
-		htmlEditor: 'form-control'
+		textEditor: 'g_editor',
+		htmlEditor: 'g_editor'
 	},
 	setup: {
 		// wysiwyg mode
@@ -238,20 +240,7 @@ angular.module('textAngularSetup', [])
 		},
 		activeState: function(){ return this.$editor().queryFormatBlockState('blockquote'); }
 	});
-	taRegisterTool('undo', {
-		iconclass: 'fa fa-undo',
-		tooltiptext: taTranslations.undo.tooltip,
-		action: function(){
-			return this.$editor().wrapSelection("undo", null);
-		}
-	});
-	taRegisterTool('redo', {
-		iconclass: 'fa fa-repeat',
-		tooltiptext: taTranslations.redo.tooltip,
-		action: function(){
-			return this.$editor().wrapSelection("redo", null);
-		}
-	});
+
 	taRegisterTool('bold', {
 		iconclass: 'fa fa-bold',
 		tooltiptext: taTranslations.bold.tooltip,
@@ -318,7 +307,7 @@ angular.module('textAngularSetup', [])
 			return this.$editor().wrapSelection("indent", null);
 		},
 		activeState: function(){
-			return this.$editor().queryFormatBlockState('blockquote'); 
+			return this.$editor().queryFormatBlockState('blockquote');
 		}
 	});
 	taRegisterTool('outdent', {
@@ -398,7 +387,7 @@ angular.module('textAngularSetup', [])
 				if(_preLis.length === 0 || _postLis.length === 0){
 					if(_postLis.length === 0) _parent.after(newElem);
 					else _parent[0].parentNode.insertBefore(newElem[0], _parent[0]);
-					
+
 					if(_preLis.length === 0 && _postLis.length === 0) _parent.remove();
 					else angular.element(possibleNodes[0]).remove();
 				}else{
@@ -428,7 +417,7 @@ angular.module('textAngularSetup', [])
 			restoreSelection();
 		}
 	});
-	
+
 	var imgOnSelectAction = function(event, $element, editorScope){
 		// setup the editor toolbar
 		// Credit to the work at http://hackerwins.github.io/summernote/ for this editbar logic/display
@@ -482,7 +471,7 @@ angular.module('textAngularSetup', [])
 		buttonGroup.append(quartButton);
 		buttonGroup.append(resetButton);
 		container.append(buttonGroup);
-		
+
 		buttonGroup = angular.element('<div class="btn-group" style="padding-right: 6px;">');
 		var floatLeft = angular.element('<button type="button" class="btn btn-default btn-sm btn-small" unselectable="on" tabindex="-1"><i class="fa fa-align-left"></i></button>');
 		floatLeft.on('click', function(event){
@@ -521,7 +510,7 @@ angular.module('textAngularSetup', [])
 		buttonGroup.append(floatNone);
 		buttonGroup.append(floatRight);
 		container.append(buttonGroup);
-		
+
 		buttonGroup = angular.element('<div class="btn-group">');
 		var remove = angular.element('<button type="button" class="btn btn-default btn-sm btn-small" unselectable="on" tabindex="-1"><i class="fa fa-trash-o"></i></button>');
 		remove.on('click', function(event){
@@ -531,26 +520,10 @@ angular.module('textAngularSetup', [])
 		});
 		buttonGroup.append(remove);
 		container.append(buttonGroup);
-		
+
 		editorScope.showPopover($element);
 		editorScope.showResizeOverlay($element);
 	};
-	
-	taRegisterTool('insertImage', {
-		iconclass: 'fa fa-picture-o',
-		tooltiptext: taTranslations.insertImage.tooltip,
-		action: function(){
-			var imageLink;
-			imageLink = $window.prompt(taTranslations.insertImage.dialogPrompt, 'http://');
-			if(imageLink && imageLink !== '' && imageLink !== 'http://'){
-				return this.$editor().wrapSelection('insertImage', imageLink, true);
-			}
-		},
-		onElementSelect: {
-			element: 'img',
-			action: imgOnSelectAction
-		}
-	});
 	taRegisterTool('insertVideo', {
 		iconclass: 'fa fa-youtube-play',
 		tooltiptext: taTranslations.insertVideo.tooltip,
@@ -578,77 +551,6 @@ angular.module('textAngularSetup', [])
 			onlyWithAttrs: ['ta-insert-video'],
 			action: imgOnSelectAction
 		}
-	});	
-	taRegisterTool('insertLink', {
-		tooltiptext: taTranslations.insertLink.tooltip,
-		iconclass: 'fa fa-link',
-		action: function(){
-			var urlLink;
-			urlLink = $window.prompt(taTranslations.insertLink.dialogPrompt, 'http://');
-			if(urlLink && urlLink !== '' && urlLink !== 'http://'){
-				return this.$editor().wrapSelection('createLink', urlLink, true);
-			}
-		},
-		activeState: function(commonElement){
-			if(commonElement) return commonElement[0].tagName === 'A';
-			return false;
-		},
-		onElementSelect: {
-			element: 'a',
-			action: function(event, $element, editorScope){
-				// setup the editor toolbar
-				// Credit to the work at http://hackerwins.github.io/summernote/ for this editbar logic
-				event.preventDefault();
-				editorScope.displayElements.popover.css('width', '435px');
-				var container = editorScope.displayElements.popoverContainer;
-				container.empty();
-				container.css('line-height', '28px');
-				var link = angular.element('<a href="' + $element.attr('href') + '" target="_blank">' + $element.attr('href') + '</a>');
-				link.css({
-					'display': 'inline-block',
-					'max-width': '200px',
-					'overflow': 'hidden',
-					'text-overflow': 'ellipsis',
-					'white-space': 'nowrap',
-					'vertical-align': 'middle'
-				});
-				container.append(link);
-				var buttonGroup = angular.element('<div class="btn-group pull-right">');
-				var reLinkButton = angular.element('<button type="button" class="btn btn-default btn-sm btn-small" tabindex="-1" unselectable="on"><i class="fa fa-edit icon-edit"></i></button>');
-				reLinkButton.on('click', function(event){
-					event.preventDefault();
-					var urlLink = $window.prompt(taTranslations.insertLink.dialogPrompt, $element.attr('href'));
-					if(urlLink && urlLink !== '' && urlLink !== 'http://'){
-						$element.attr('href', urlLink);
-						editorScope.updateTaBindtaTextElement();
-					}
-					editorScope.hidePopover();
-				});
-				buttonGroup.append(reLinkButton);
-				var unLinkButton = angular.element('<button type="button" class="btn btn-default btn-sm btn-small" tabindex="-1" unselectable="on"><i class="fa fa-unlink icon-unlink"></i></button>');
-				// directly before this click event is fired a digest is fired off whereby the reference to $element is orphaned off
-				unLinkButton.on('click', function(event){
-					event.preventDefault();
-					$element.replaceWith($element.contents());
-					editorScope.updateTaBindtaTextElement();
-					editorScope.hidePopover();
-				});
-				buttonGroup.append(unLinkButton);
-				var targetToggle = angular.element('<button type="button" class="btn btn-default btn-sm btn-small" tabindex="-1" unselectable="on">Open in New Window</button>');
-				if($element.attr('target') === '_blank'){
-					targetToggle.addClass('active');
-				}
-				targetToggle.on('click', function(event){
-					event.preventDefault();
-					$element.attr('target', ($element.attr('target') === '_blank') ? '' : '_blank');
-					targetToggle.toggleClass('active');
-					editorScope.updateTaBindtaTextElement();
-				});
-				buttonGroup.append(targetToggle);
-				container.append(buttonGroup);
-				editorScope.showPopover($element);
-			}
-		}
 	});
 	taRegisterTool('wordcount', {
 		display: '<div id="toolbarWC" style="display:block; min-width:100px;">Words:{{wordcount}}</div>',
@@ -658,11 +560,11 @@ angular.module('textAngularSetup', [])
 			var textElement = this.$editor().displayElements.text;
 			var workingHTML = textElement[0].innerHTML;
 			var sourceText = workingHTML.replace(/(<[^>]*?>)/ig, ' '); // replace all html tags with spaces
-			
+
 			// Caculate number of words
 			var sourceTextMatches = sourceText.match(/\S+/g);
 			var noOfWords = sourceTextMatches && sourceTextMatches.length || 0;
-			
+
 			//Set current scope
 			this.wordcount = noOfWords;
 			//Set editor scope
@@ -677,7 +579,7 @@ angular.module('textAngularSetup', [])
 		activeState: function(){ // this fires on keyup
 			var textElement = this.$editor().displayElements.text;
 			var sourceText = textElement[0].innerText || textElement[0].textContent; // to cover the non-jquery use case.
-			
+
 			// Caculate number of chars
 			var noOfChars = sourceText.replace(/(\r\n|\n|\r)/gm,"").replace(/^\s+/g,' ').replace(/\s+$/g, ' ').length;
 			//Set current scope
@@ -687,11 +589,155 @@ angular.module('textAngularSetup', [])
 			return false;
 		}
 	});
-    taRegisterTool('text_tab', {
-        tooltiptext : 'T',
-        buttontext : 'T',
-        action : function () {
-            console.log(this.$parent.changeTab('text'));
+
+    taRegisterTool('undo', {
+        iconclass: 'undo',
+        class: 'b_undo',
+        tooltiptext: taTranslations.undo.tooltip,
+        action: function(){
+            return this.$editor().wrapSelection("undo", null);
         }
+    });
+    taRegisterTool('redo', {
+        iconclass: 'redo',
+        class: 'b_redo',
+        tooltiptext: taTranslations.redo.tooltip,
+        action: function(){
+            return this.$editor().wrapSelection("redo", null);
+        }
+    });
+
+    taRegisterTool('smiles', {
+        iconclass : 'smiles',
+        action : function () {
+            return this.$parent.changeTab('smile');
+        },
+        activeState : function () {
+            return this.$parent.currentTab == 'smile';
+        }
+    });
+
+    taRegisterTool('text', {
+        iconclass : 'text',
+        action : function () {
+            return this.$parent.changeTab('text');
+        },
+        activeState : function () {
+            return this.$parent.currentTab == 'text';
+        }
+    });
+
+    taRegisterTool('alignment', {
+        iconclass : 'alignment',
+        action : function () {
+            return this.$parent.changeTab('alignment');
+        },
+        activeState : function () {
+            return this.$parent.currentTab == 'alignment';
+        }
+    });
+
+    taRegisterTool('insertLink', {
+        tooltiptext: taTranslations.insertLink.tooltip,
+        iconclass: 'hyperlinks',
+        action: function(){
+            var urlLink;
+            urlLink = $window.prompt(taTranslations.insertLink.dialogPrompt, 'http://');
+            if(urlLink && urlLink !== '' && urlLink !== 'http://'){
+                return this.$editor().wrapSelection('createLink', urlLink, true);
+            }
+        },
+        activeState: function(commonElement){
+            if(commonElement) return commonElement[0].tagName === 'A';
+            return false;
+        },
+        onElementSelect: {
+            element: 'a',
+            action: function(event, $element, editorScope){
+                // setup the editor toolbar
+                // Credit to the work at http://hackerwins.github.io/summernote/ for this editbar logic
+                event.preventDefault();
+                editorScope.displayElements.popover.css('width', '435px');
+                var container = editorScope.displayElements.popoverContainer;
+                container.empty();
+                container.css('line-height', '28px');
+                var link = angular.element('<a href="' + $element.attr('href') + '" target="_blank">' + $element.attr('href') + '</a>');
+                link.css({
+                    'display': 'inline-block',
+                    'max-width': '200px',
+                    'overflow': 'hidden',
+                    'text-overflow': 'ellipsis',
+                    'white-space': 'nowrap',
+                    'vertical-align': 'middle'
+                });
+                container.append(link);
+                var buttonGroup = angular.element('<div class="btn-group pull-right">');
+                var reLinkButton = angular.element('<button type="button" class="btn btn-default btn-sm btn-small" tabindex="-1" unselectable="on"><i class="fa fa-edit icon-edit"></i></button>');
+                reLinkButton.on('click', function(event){
+                    event.preventDefault();
+                    var urlLink = $window.prompt(taTranslations.insertLink.dialogPrompt, $element.attr('href'));
+                    if(urlLink && urlLink !== '' && urlLink !== 'http://'){
+                        $element.attr('href', urlLink);
+                        editorScope.updateTaBindtaTextElement();
+                    }
+                    editorScope.hidePopover();
+                });
+                buttonGroup.append(reLinkButton);
+                var unLinkButton = angular.element('<button type="button" class="btn btn-default btn-sm btn-small" tabindex="-1" unselectable="on"><i class="fa fa-unlink icon-unlink"></i></button>');
+                // directly before this click event is fired a digest is fired off whereby the reference to $element is orphaned off
+                unLinkButton.on('click', function(event){
+                    event.preventDefault();
+                    $element.replaceWith($element.contents());
+                    editorScope.updateTaBindtaTextElement();
+                    editorScope.hidePopover();
+                });
+                buttonGroup.append(unLinkButton);
+                var targetToggle = angular.element('<button type="button" class="btn btn-default btn-sm btn-small" tabindex="-1" unselectable="on">Open in New Window</button>');
+                if($element.attr('target') === '_blank'){
+                    targetToggle.addClass('active');
+                }
+                targetToggle.on('click', function(event){
+                    event.preventDefault();
+                    $element.attr('target', ($element.attr('target') === '_blank') ? '' : '_blank');
+                    targetToggle.toggleClass('active');
+                    editorScope.updateTaBindtaTextElement();
+                });
+                buttonGroup.append(targetToggle);
+                container.append(buttonGroup);
+                editorScope.showPopover($element);
+            }
+        }
+    });
+
+    taRegisterTool('insertImage', {
+        iconclass: 'images',
+        tooltiptext: taTranslations.insertImage.tooltip,
+        action: function(){
+            var imageLink;
+            imageLink = $window.prompt(taTranslations.insertImage.dialogPrompt, 'http://');
+            if(imageLink && imageLink !== '' && imageLink !== 'http://'){
+                return this.$editor().wrapSelection('insertImage', imageLink, true);
+            }
+        },
+        onElementSelect: {
+            element: 'img',
+            action: imgOnSelectAction
+        }
+    });
+
+    taRegisterTool('contentScreen', {
+        iconclass: 'contentscreen',
+        action: function() {
+
+        }
+    });
+    taRegisterTool('increaseEditorHeight', {
+        iconclass: 'increase-editor-height',
+        action: function() {
+
+        }
+    });
+    taRegisterTool('decreaseEditorHeight', {
+        iconclass: 'decrease-editor-height'
     });
 }]);

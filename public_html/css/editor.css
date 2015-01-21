@@ -1,0 +1,285 @@
+.g_editor {
+    background: #fff;
+}
+.editor_button {
+    background: none;
+    width: 34px;
+    height: 34px;
+}
+.g_toolbar {
+    background: #fff;
+    position: relative;
+    max-height: 70px;
+    min-height: 35px;
+}
+.g_toolbar button {
+    background: none;
+    border: none;
+}
+.undo, .redo, .bold, .italic, .underline, .smiles, .unformat, .alignment, .hyperlinks, .text, .images, .contentscreen, .h3, .h2, .h1, .ul, .ol, .align-left, .align-center, .align-right, .indent, .outdent, .color, .font-color-indicator, .background-color-indicator, .increase-editor-height, .decrease-editor-height, .increase-font-size, .decrease-font-size {
+    background: url('../images/sprites_24_p2.png') no-repeat;
+    width: 24px;
+    height: 24px !important;
+}
+
+.undo {
+    background-position: 0px -24px;
+    margin-top: 2px;
+}
+
+.undo:hover {
+    background-position: 0px -48px;
+}
+
+.redo {
+    margin-top: 2px;
+    background-position: 0px -96px;
+}
+
+.redo:hover {
+    background-position: 0px -120px;
+}
+
+.bold {
+    background-position: 0px -888px;
+}
+
+.bold:hover {
+    background-position: 0px -912px;
+}
+
+.bold.active {
+    background-position: 0px -936px;
+}
+
+.bold.active:hover {
+    background-position: 0px -960px;
+}
+
+.italic {
+    background-position: 0px -1008px;
+}
+
+.italic:hover {
+    background-position: 0px -1032px;
+}
+
+.italic.active {
+    background-position: 0px -1056px;
+}
+
+.italic.active:hover {
+    background-position: 0px -1080px;
+}
+
+.underline {
+    background-position: 0px -1128px;
+}
+
+.underline:hover {
+    background-position: 0px -1152px;
+}
+
+.underline.active {
+    background-position: 0px -1176px;
+}
+
+.underline.active:hover {
+    background-position: 0px -1200px;
+}
+
+.h3 {
+    background-position: 0px -1248px;
+}
+
+.h3:hover {
+    background-position: 0px -1272px;
+}
+
+.h3.active {
+    background-position: 0px -1296px;
+}
+
+.h3.active:hover {
+    background-position: 0px -1320px;
+}
+
+.h2 {
+    background-position: 0px -1368px;
+}
+
+.h2:hover {
+    background-position: 0px -1392px;
+}
+
+.h2.active {
+    background-position: 0px -1416px;
+}
+
+.h2.active:hover {
+    background-position: 0px -1440px;
+}
+
+.h1 {
+    background-position: 0px -1488px;
+}
+
+.h1:hover {
+    background-position: 0px -1512px;
+}
+
+.h1.active {
+    background-position: 0px -1536px;
+}
+
+.h1.active:hover {
+    background-position: 0px -1560px;
+}
+
+.ul {
+    background-position: 0px -2352px;
+}
+
+.ul:hover {
+    background-position: 0px -2376px;
+}
+
+.ul.active {
+    background-position: 0px -2400px;
+}
+
+.ul.active:hover {
+    background-position: 0px -2424px;
+}
+
+.ol {
+    background-position: 0px -2232px;
+}
+
+.ol:hover {
+    background-position: 0px -2256px;
+}
+
+.ol.active {
+    background-position: 0px -2280px;
+}
+
+.ol.active:hover {
+    background-position: 0px -2304px;
+}
+
+.unformat {
+    background-position: 0px -2160px;
+}
+
+
+.smiles {
+    background-position: 0px -168px;
+}
+
+.smiles:hover {
+    background-position: 0px -192px;
+}
+
+.smiles.active {
+    background-position: 0px -216px;
+}
+
+.text {
+    background-position: 0px -264px;
+}
+
+.text:hover {
+    background-position: 0px -288px;
+}
+
+.text.active {
+    background-position: 0px -312px;
+}
+
+.alignment {
+    background-position: 0px -360px;
+}
+
+.alignment:hover {
+    background-position: 0px -384px;
+}
+
+.alignment.active {
+    background-position: 0px -407px;
+}
+
+.hyperlinks {
+    background-position: 0px -456px;
+}
+
+.hyperlinks:hover {
+    background-position: 0px -480px;
+}
+
+.hyperlinks.active {
+    background-position: 0px -504px;
+}
+
+.images {
+    background-position: 0px -552px;
+}
+
+.images:hover {
+    background-position: 0px -576px;
+}
+
+.images.active {
+    background-position: 0px -600px;
+}
+
+.contentscreen {
+    background-position: 0px -648px;
+}
+
+.contentscreen:hover, .contentscreen:active {
+    background-position: 0px -672px;
+}
+
+.contentscreen.active {
+    background-position: 0px -840px;
+}
+
+.contentscreen.active:hover {
+    background-position: 0px -864px;
+}
+.increase-editor-height {
+    background-position: 0px -720px;
+}
+
+.increase-editor-height:hover {
+    background-position: 0px -744px;
+}
+
+.decrease-editor-height {
+    background-position: 0px -792px;
+}
+
+.decrease-editor-height:hover {
+    background-position: 0px -816px;
+}
+
+.toolbar_group {
+    position: absolute;
+}
+.toolbar_group:nth-child(1) {
+    left: 0;
+}
+.toolbar_group:nth-child(2) {
+    left: 50%;
+    width: 180px;
+    margin-left: -90px;
+}
+.toolbar_group:nth-child(3) {
+    right: 0;
+}
+.editor_button.active {
+    background: #eaf1fb;
+    border: 1px #eceff6 solid;
+    border-bottom: none;
+}
