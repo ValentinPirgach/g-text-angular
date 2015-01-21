@@ -11,11 +11,13 @@ angular.module('textAngularSetup', [])
 // Here we set up the global display defaults, to set your own use a angular $provider#decorator.
 .value('taOptions',  {
 	toolbar: [
+        ['text_tab', 'styling_tab'],
 		['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'pre', 'quote'],
 		['bold', 'italics', 'underline', 'strikeThrough', 'ul', 'ol', 'redo', 'undo', 'clear'],
 		['justifyLeft','justifyCenter','justifyRight','indent','outdent'],
 		['html', 'insertImage', 'insertLink', 'insertVideo', 'wordcount', 'charcount']
 	],
+    //tab : '',
 	classes: {
 		focussed: "focussed",
 		toolbar: "btn-toolbar",
@@ -181,9 +183,11 @@ angular.module('textAngularSetup', [])
 	var headerAction = function(){
 		return this.$editor().wrapSelection("formatBlock", "<" + this.name.toUpperCase() +">");
 	};
+
 	angular.forEach(['h1','h2','h3','h4','h5','h6'], function(h){
 		taRegisterTool(h.toLowerCase(), {
 			buttontext: h.toUpperCase(),
+            tab: 'text',
 			tooltiptext: taTranslations.heading.tooltip + h.charAt(1),
 			action: headerAction,
 			activeState: _retActiveStateFunction(h.toLowerCase())
@@ -192,6 +196,7 @@ angular.module('textAngularSetup', [])
 	taRegisterTool('p', {
 		buttontext: 'P',
 		tooltiptext: taTranslations.p.tooltip,
+        tab : 'text',
 		action: function(){
 			return this.$editor().wrapSelection("formatBlock", "<P>");
 		},
@@ -200,12 +205,15 @@ angular.module('textAngularSetup', [])
 	// key: pre -> taTranslations[key].tooltip, taTranslations[key].buttontext
 	taRegisterTool('pre', {
 		buttontext: 'pre',
+        tab: 'text',
 		tooltiptext: taTranslations.pre.tooltip,
 		action: function(){
 			return this.$editor().wrapSelection("formatBlock", "<PRE>");
 		},
 		activeState: function(){ return this.$editor().queryFormatBlockState('pre'); }
 	});
+
+
 	taRegisterTool('ul', {
 		iconclass: 'fa fa-list-ul',
 		tooltiptext: taTranslations.ul.tooltip,
@@ -679,4 +687,11 @@ angular.module('textAngularSetup', [])
 			return false;
 		}
 	});
+    taRegisterTool('text_tab', {
+        tooltiptext : 'T',
+        buttontext : 'T',
+        action : function () {
+            console.log(this.$parent.changeTab('text'));
+        }
+    });
 }]);

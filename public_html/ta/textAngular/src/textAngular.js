@@ -1642,7 +1642,6 @@ textAngular.directive("textAngular", [
 					e.preventDefault();
 					return false;
 				});
-
 				// define the popover show and hide functions
 				scope.showPopover = function(_el){
 					scope.displayElements.popover.css('display', 'block');
@@ -2362,7 +2361,18 @@ textAngular.directive('textAngularToolbar', [
 					else element.removeClass(scope.classes.focussed);
 				});
 
-				var setupToolElement = function(toolDefinition, toolScope){
+                /**
+                 * function that changed tabs
+                 * created by: valentin_pirgach / 21-01-15
+                 **/
+                scope.currentTab = '';
+                scope.changeTab = function (tab, element) {
+                    if(scope.currentTab == tab) scope.currentTab = '';
+                    else scope.currentTab = tab;
+
+                };
+
+                var setupToolElement = function(toolDefinition, toolScope){
 					var toolElement;
 					if(toolDefinition && toolDefinition.display){
 						toolElement = angular.element(toolDefinition.display);
@@ -2383,6 +2393,15 @@ textAngular.directive('textAngularToolbar', [
 					if (toolDefinition && toolDefinition.tooltiptext) {
 						toolElement.attr('title', toolDefinition.tooltiptext);
 					}
+
+                    if (toolDefinition && toolDefinition.tab) {
+                        toolScope.tab = false;
+                        scope.$watch('currentTab', function (tab) {
+                            toolScope.tab = toolDefinition.tab == tab;
+                        });
+                        toolElement.attr('ng-show', 'tab');
+                        console.log('current', scope.currentTab, 'tab', toolDefinition.tab);
+                    }
 
 					toolElement.on('mousedown', function(e, eventData){
 						/* istanbul ignore else: this is for catching the jqLite testing*/
