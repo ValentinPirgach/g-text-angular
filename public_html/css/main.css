@@ -7,17 +7,18 @@ Version 1.3.0-pre9
 See README.md or https://github.com/fraywing/textAngular/wiki for requirements and use.
 */
 
+body {
+    overflow-x: hidden;
+}
+
 /* add generic styling for the editor */
 .ta-root.focussed > .ta-scroll-window.form-control {
-    border-color: #66afe9;
     outline: 0;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
-    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+    border: none;
 }
 
 .ta-editor.ta-html, .ta-scroll-window.form-control {
-    min-height: 300px;
+    min-height: 200px;
     height: auto;
     overflow: auto;
     font-family: inherit;
@@ -30,13 +31,18 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 }
 
 .ta-scroll-window > .ta-bind {
-    height: auto;
-    min-height: 300px;
-    padding: 6px 12px;
+    min-height: 200px;
+    padding: 6px 0px;
+    overflow: auto;
+    border-bottom: 1px #dbdde2 solid;
+    height: 200px;
 }
 
 .ta-editor:focus {
     user-select: text;
+}
+.ta-bind:focus {
+    outline: none;
 }
 
 /* add the styling for the awesomness of the resizer */
@@ -190,8 +196,162 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 
 .main_wrapper {
     position: relative;
+}
+.ta_wrapper {
+    position: relative;
     margin: 0 auto;
-    width: 860px;
+    width: 700px;
     background: #ccc;
-    border: 1px #9d9d9d solid;
+}
+
+.g_editor {
+    background: #fff;
+}
+.editor_button {
+    background: none;
+    width: 34px;
+    height: 34px;
+}
+.g_toolbar {
+    background: #fff;
+    position: relative;
+    border-bottom: 1px #dbdde2 solid;
+    height: 36px;
+}
+.g_toolbar.tab_active {
+    height: 72px;
+}
+.g_toolbar button {
+    background: none;
+    border: none;
+    padding: 0;
+    height: 36px;
+    width: 36px;
+}
+.toolbar_group {
+    position: absolute;
+    height: 36px;
+    opacity: 0.7;
+}
+.focussed .toolbar_group {
+    opacity: 1;
+}
+
+.toolbar_group:nth-child(1) {
+    left: 0;
+    width: 72px;
+}
+.toolbar_group:nth-child(2) {
+    left: 50%;
+    width: 180px;
+    margin-left: -90px;
+}
+.toolbar_group:nth-child(3) {
+    right: 0;
+    width: 108px;
+}
+.editor_button.active {
+    background: #eaf1fb;
+}
+.toolbar_group:nth-child(4),
+.toolbar_group:nth-child(5){
+    width: 100%;
+    background: #eaf1fb;
+    top: 36px;
+    display: none;
+}
+.active_tab_text .toolbar_group:nth-child(4),
+.active_tab_alignment .toolbar_group:nth-child(5){
+    display: block;
+}
+.editor_font_size {
+    position: relative;
+    left: 50px;
+}
+.alignment_align {
+    position: relative;
+    left: 100px;
+}
+.in_outdent {
+    position: relative;
+    left: 200px;
+}
+.link_form {
+    position: absolute;
+    top: 36px;
+}
+.input_e_url {
+    height: 35px;
+    border: none;
+    outline: none;
+    padding: 0 15px;
+    font-size: 12px;
+    border-top: 1px #dbdde2 solid;
+    width: 670px; /*TODO сдалеть ширну блока 100%, наследуемую из ширини самого редактора*/
+}
+.orange_border {
+    position: absolute;
+    height: 0px;
+    border-right: 3px darkorange solid;
+    top: 50%;
+    transition: all 0.2s linear;
+}
+.link_form:hover .orange_border {
+    top: 20%;
+    height: 24px;
+}
+.input_e_url:focus ~ .orange_border {
+    top: 0;
+    height: 36px;
+}
+.link_ok, .link_cancel {
+    position: absolute;
+    top: 6px;
+    width: 24px;
+    height: 24px;
+}
+.link_ok {
+    background: green;
+    right: 40px;
+}
+.link_cancel {
+    background: red;
+    right: 10px;
+}
+.contacts_wrapper {
+    position: relative;
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 34px;
+    border: 1px #ccc solid;
+}
+.contact {
+    position: relative;
+    width: 137px;
+    height: 80px;
+    display: inline-block;
+    border: 1px rgba(119, 140, 233, 0.87) solid;
+    margin: 10px 2px;
+    padding: 2px;
+    background: rgba(128, 153, 255, 0.70);
+}
+.c_name {
+    position: absolute;
+    width: 100%;
+    bottom: 5px;
+    left: 5px;
+}
+.c_remind {
+    position: absolute;
+    font-size: 11px;
+    top: -7px;
+    left: 0;
+    color: rgba(128, 153, 255, 1);
+    background: rgba(0,0,0,0.9);
+    padding: 2px 10px;
+}
+.c_scroll_wrapper {
+    height: 90px;
+    width: 100%;
+    overflow: hidden;
 }

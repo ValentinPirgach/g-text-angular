@@ -14,14 +14,17 @@ angular.module('textAngularSetup', [])
         ['undo', 'redo'],
         ['smiles', 'text', 'alignment', 'insertLink', 'insertImage'],
         ["contentScreen", "increaseEditorHeight", "decreaseEditorHeight"],
-        /*['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'pre', 'quote'],
-        ['bold', 'italics', 'underline', 'strikeThrough', 'ul', 'ol', 'redo', 'undo', 'clear'],
-        ['justifyLeft','justifyCenter','justifyRight','indent','outdent'],
-        ['html', 'insertImage', 'insertLink', 'insertVideo', 'wordcount', 'charcount']*/
+        //['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'pre', 'quote'],
+        ['clear', 'bold', 'italics', 'underline', 'h3', 'h2', 'h1'],
+        ['ul', 'ol', 'justifyLeft','justifyCenter','justifyRight','indent','outdent'],
+        ['linkForm']
+        //['justifyLeft','justifyCenter','justifyRight','indent','outdent'],
+        //['html', 'insertImage', 'insertLink', 'insertVideo', 'wordcount', 'charcount']
 	],
     //tab : '',
 	classes: {
 		focussed: "focussed",
+		tab_active: "tab_active",
 		toolbar: "g_toolbar",
 		toolbarGroup: "toolbar_group",
 		toolbarButton: "editor_button",
@@ -164,7 +167,11 @@ angular.module('textAngularSetup', [])
 	},
 		charcount: {
 		tooltip: 'Display characters Count'
-	}
+	},
+    h1:{tooltip:"Заголовок 1-го уровня"},
+    h2:{tooltip:"Заголовок 2-го уровня"},
+    h3:{tooltip:"Заголовок 3-го уровня"},
+    unformat:{tooltip:"Отменить форматирование"}
 })
 .run(['taRegisterTool', '$window', 'taTranslations', 'taSelection', function(taRegisterTool, $window, taTranslations, taSelection){
 	taRegisterTool("html", {
@@ -186,7 +193,7 @@ angular.module('textAngularSetup', [])
 		return this.$editor().wrapSelection("formatBlock", "<" + this.name.toUpperCase() +">");
 	};
 
-	angular.forEach(['h1','h2','h3','h4','h5','h6'], function(h){
+	/*angular.forEach(['h1','h2','h3','h4','h5','h6'], function(h){
 		taRegisterTool(h.toLowerCase(), {
 			buttontext: h.toUpperCase(),
             tab: 'text',
@@ -194,7 +201,7 @@ angular.module('textAngularSetup', [])
 			action: headerAction,
 			activeState: _retActiveStateFunction(h.toLowerCase())
 		});
-	});
+	});*/
 	taRegisterTool('p', {
 		buttontext: 'P',
 		tooltiptext: taTranslations.p.tooltip,
@@ -216,22 +223,6 @@ angular.module('textAngularSetup', [])
 	});
 
 
-	taRegisterTool('ul', {
-		iconclass: 'fa fa-list-ul',
-		tooltiptext: taTranslations.ul.tooltip,
-		action: function(){
-			return this.$editor().wrapSelection("insertUnorderedList", null);
-		},
-		activeState: function(){ return this.$editor().queryCommandState('insertUnorderedList'); }
-	});
-	taRegisterTool('ol', {
-		iconclass: 'fa fa-list-ol',
-		tooltiptext: taTranslations.ol.tooltip,
-		action: function(){
-			return this.$editor().wrapSelection("insertOrderedList", null);
-		},
-		activeState: function(){ return this.$editor().queryCommandState('insertOrderedList'); }
-	});
 	taRegisterTool('quote', {
 		iconclass: 'fa fa-quote-right',
 		tooltiptext: taTranslations.quote.tooltip,
@@ -241,107 +232,6 @@ angular.module('textAngularSetup', [])
 		activeState: function(){ return this.$editor().queryFormatBlockState('blockquote'); }
 	});
 
-	taRegisterTool('bold', {
-		iconclass: 'fa fa-bold',
-		tooltiptext: taTranslations.bold.tooltip,
-		action: function(){
-			return this.$editor().wrapSelection("bold", null);
-		},
-		activeState: function(){
-			return this.$editor().queryCommandState('bold');
-		},
-		commandKeyCode: 98
-	});
-	taRegisterTool('justifyLeft', {
-		iconclass: 'fa fa-align-left',
-		tooltiptext: taTranslations.justifyLeft.tooltip,
-		action: function(){
-			return this.$editor().wrapSelection("justifyLeft", null);
-		},
-		activeState: function(commonElement){
-			var result = false;
-			if(commonElement) result =
-				commonElement.css('text-align') === 'left' ||
-				commonElement.attr('align') === 'left' ||
-				(
-					commonElement.css('text-align') !== 'right' &&
-					commonElement.css('text-align') !== 'center' &&
-					commonElement.css('text-align') !== 'justify' &&
-					!this.$editor().queryCommandState('justifyRight') &&
-					!this.$editor().queryCommandState('justifyCenter')
-				) && !this.$editor().queryCommandState('justifyFull');
-			result = result || this.$editor().queryCommandState('justifyLeft');
-			return result;
-		}
-	});
-	taRegisterTool('justifyRight', {
-		iconclass: 'fa fa-align-right',
-		tooltiptext: taTranslations.justifyRight.tooltip,
-		action: function(){
-			return this.$editor().wrapSelection("justifyRight", null);
-		},
-		activeState: function(commonElement){
-			var result = false;
-			if(commonElement) result = commonElement.css('text-align') === 'right';
-			result = result || this.$editor().queryCommandState('justifyRight');
-			return result;
-		}
-	});
-	taRegisterTool('justifyCenter', {
-		iconclass: 'fa fa-align-center',
-		tooltiptext: taTranslations.justifyCenter.tooltip,
-		action: function(){
-			return this.$editor().wrapSelection("justifyCenter", null);
-		},
-		activeState: function(commonElement){
-			var result = false;
-			if(commonElement) result = commonElement.css('text-align') === 'center';
-			result = result || this.$editor().queryCommandState('justifyCenter');
-			return result;
-		}
-	});
-	taRegisterTool('indent', {
-		iconclass: 'fa fa-indent',
-		tooltiptext: taTranslations.indent.tooltip,
-		action: function(){
-			return this.$editor().wrapSelection("indent", null);
-		},
-		activeState: function(){
-			return this.$editor().queryFormatBlockState('blockquote');
-		}
-	});
-	taRegisterTool('outdent', {
-		iconclass: 'fa fa-outdent',
-		tooltiptext: taTranslations.outdent.tooltip,
-		action: function(){
-			return this.$editor().wrapSelection("outdent", null);
-		},
-		activeState: function(){
-			return false;
-		}
-	});
-	taRegisterTool('italics', {
-		iconclass: 'fa fa-italic',
-		tooltiptext: taTranslations.italic.tooltip,
-		action: function(){
-			return this.$editor().wrapSelection("italic", null);
-		},
-		activeState: function(){
-			return this.$editor().queryCommandState('italic');
-		},
-		commandKeyCode: 105
-	});
-	taRegisterTool('underline', {
-		iconclass: 'fa fa-underline',
-		tooltiptext: taTranslations.underline.tooltip,
-		action: function(){
-			return this.$editor().wrapSelection("underline", null);
-		},
-		activeState: function(){
-			return this.$editor().queryCommandState('underline');
-		},
-		commandKeyCode: 117
-	});
 	taRegisterTool('strikeThrough', {
 		iconclass: 'fa fa-strikethrough',
 		action: function(){
@@ -349,72 +239,6 @@ angular.module('textAngularSetup', [])
 		},
 		activeState: function(){
 			return document.queryCommandState('strikeThrough');
-		}
-	});
-	taRegisterTool('clear', {
-		iconclass: 'fa fa-ban',
-		tooltiptext: taTranslations.clear.tooltip,
-		action: function(deferred, restoreSelection){
-			var i;
-			this.$editor().wrapSelection("removeFormat", null);
-			var possibleNodes = angular.element(taSelection.getSelectionElement());
-			// remove lists
-			var removeListElements = function(list){
-				list = angular.element(list);
-				var prevElement = list;
-				angular.forEach(list.children(), function(liElem){
-					var newElem = angular.element('<p></p>');
-					newElem.html(angular.element(liElem).html());
-					prevElement.after(newElem);
-					prevElement = newElem;
-				});
-				list.remove();
-			};
-			angular.forEach(possibleNodes.find("ul"), removeListElements);
-			angular.forEach(possibleNodes.find("ol"), removeListElements);
-			if(possibleNodes[0].tagName.toLowerCase() === 'li'){
-				var _list = possibleNodes[0].parentNode.childNodes;
-				var _preLis = [], _postLis = [], _found = false;
-				for(i = 0; i < _list.length; i++){
-					if(_list[i] === possibleNodes[0]){
-						_found = true;
-					}else if(!_found) _preLis.push(_list[i]);
-					else _postLis.push(_list[i]);
-				}
-				var _parent = angular.element(possibleNodes[0].parentNode);
-				var newElem = angular.element('<p></p>');
-				newElem.html(angular.element(possibleNodes[0]).html());
-				if(_preLis.length === 0 || _postLis.length === 0){
-					if(_postLis.length === 0) _parent.after(newElem);
-					else _parent[0].parentNode.insertBefore(newElem[0], _parent[0]);
-
-					if(_preLis.length === 0 && _postLis.length === 0) _parent.remove();
-					else angular.element(possibleNodes[0]).remove();
-				}else{
-					var _firstList = angular.element('<'+_parent[0].tagName+'></'+_parent[0].tagName+'>');
-					var _secondList = angular.element('<'+_parent[0].tagName+'></'+_parent[0].tagName+'>');
-					for(i = 0; i < _preLis.length; i++) _firstList.append(angular.element(_preLis[i]));
-					for(i = 0; i < _postLis.length; i++) _secondList.append(angular.element(_postLis[i]));
-					_parent.after(_secondList);
-					_parent.after(newElem);
-					_parent.after(_firstList);
-					_parent.remove();
-				}
-				taSelection.setSelectionToElementEnd(newElem[0]);
-			}
-			// clear out all class attributes. These do not seem to be cleared via removeFormat
-			var $editor = this.$editor();
-			var recursiveRemoveClass = function(node){
-				node = angular.element(node);
-				if(node[0] !== $editor.displayElements.text[0]) node.removeAttr('class');
-				angular.forEach(node.children(), recursiveRemoveClass);
-			};
-			angular.forEach(possibleNodes, recursiveRemoveClass);
-			// check if in list. If not in list then use formatBlock option
-			if(possibleNodes[0].tagName.toLowerCase() !== 'li' &&
-				possibleNodes[0].tagName.toLowerCase() !== 'ol' &&
-				possibleNodes[0].tagName.toLowerCase() !== 'ul') this.$editor().wrapSelection("formatBlock", "default");
-			restoreSelection();
 		}
 	});
 
@@ -641,15 +465,17 @@ angular.module('textAngularSetup', [])
         tooltiptext: taTranslations.insertLink.tooltip,
         iconclass: 'hyperlinks',
         action: function(){
-            var urlLink;
+            /*var urlLink;
             urlLink = $window.prompt(taTranslations.insertLink.dialogPrompt, 'http://');
             if(urlLink && urlLink !== '' && urlLink !== 'http://'){
                 return this.$editor().wrapSelection('createLink', urlLink, true);
-            }
+            }*/
+            return this.$parent.changeTab('link');
         },
         activeState: function(commonElement){
-            if(commonElement) return commonElement[0].tagName === 'A';
-            return false;
+            return this.$parent.currentTab == 'link';
+            /*if(commonElement) return commonElement[0].tagName === 'A';
+            return false;*/
         },
         onElementSelect: {
             element: 'a',
@@ -728,16 +554,353 @@ angular.module('textAngularSetup', [])
     taRegisterTool('contentScreen', {
         iconclass: 'contentscreen',
         action: function() {
-
+            var h = this.$editor().displayElements.text[0].scrollHeight;
+            console.log(parseInt(this.$editor().displayElements.text.css('height').replace('px', '')), h);
+            if(parseInt(this.$editor().displayElements.text.css('height').replace('px', '')) + 12 < h &&
+                parseInt(this.$editor().displayElements.text.css('height').replace('px', '')) + 12 > 200)
+                this.$editor().displayElements.text.css('height', h+'px');
         }
     });
     taRegisterTool('increaseEditorHeight', {
         iconclass: 'increase-editor-height',
         action: function() {
-
+            var h = this.$editor().displayElements.text.css('height').replace('px', '');
+            this.$editor().displayElements.text.css('height', (parseInt(h) + 100)+'px');
         }
     });
     taRegisterTool('decreaseEditorHeight', {
-        iconclass: 'decrease-editor-height'
+        iconclass: 'decrease-editor-height',
+        action: function() {
+            var h = this.$editor().displayElements.text.css('height').replace('px', '');
+            this.$editor().displayElements.text.css('height', (parseInt(h) - 100)+'px');
+        }
+    });
+
+    taRegisterTool('bold', {
+        iconclass: 'bold',
+        tab: 'text',
+        tooltiptext: taTranslations.bold.tooltip,
+        action: function(){
+            return this.$editor().wrapSelection("bold", null);
+        },
+        activeState: function(){
+            return this.$editor().queryCommandState('bold');
+        },
+        commandKeyCode: 98
+    });
+
+    taRegisterTool('italics', {
+        iconclass: 'italic',
+        tab: 'text',
+        tooltiptext: taTranslations.italic.tooltip,
+        action: function(){
+            return this.$editor().wrapSelection("italic", null);
+        },
+        activeState: function(){
+            return this.$editor().queryCommandState('italic');
+        },
+        commandKeyCode: 105
+    });
+    taRegisterTool('underline', {
+        iconclass: 'underline',
+        tab: 'text',
+        tooltiptext: taTranslations.underline.tooltip,
+        action: function(){
+            return this.$editor().wrapSelection("underline", null);
+        },
+        activeState: function(){
+            return this.$editor().queryCommandState('underline');
+        },
+        commandKeyCode: 117
+    });
+    taRegisterTool('clear', {
+        iconclass: 'unformat',
+        tab : 'text',
+        tooltiptext: taTranslations.clear.tooltip,
+        action: function(deferred, restoreSelection){
+            var i;
+            this.$editor().wrapSelection("removeFormat", null);
+            var possibleNodes = angular.element(taSelection.getSelectionElement());
+            // remove lists
+            var removeListElements = function(list){
+                list = angular.element(list);
+                var prevElement = list;
+                angular.forEach(list.children(), function(liElem){
+                    var newElem = angular.element('<div></div>');
+                    newElem.html(angular.element(liElem).html());
+                    prevElement.after(newElem);
+                    prevElement = newElem;
+                });
+                list.remove();
+            };
+            angular.forEach(possibleNodes.parent().find("ul"), removeListElements);
+            angular.forEach(possibleNodes.parent().find("ol"), removeListElements);
+            if(possibleNodes[0].tagName.toLowerCase() === 'li'){
+                var _list = possibleNodes[0].parentNode.childNodes;
+                var _preLis = [], _postLis = [], _found = false;
+                for(i = 0; i < _list.length; i++){
+                    if(_list[i] === possibleNodes[0]){
+                        _found = true;
+                    }else if(!_found) _preLis.push(_list[i]);
+                    else _postLis.push(_list[i]);
+                }
+                var _parent = angular.element(possibleNodes[0].parentNode);
+                var newElem = angular.element('<div></div>');
+                newElem.html(angular.element(possibleNodes[0]).html());
+                if(_preLis.length === 0 || _postLis.length === 0){
+                    if(_postLis.length === 0) _parent.after(newElem);
+                    else _parent[0].parentNode.insertBefore(newElem[0], _parent[0]);
+
+                    if(_preLis.length === 0 && _postLis.length === 0) _parent.remove();
+                    else angular.element(possibleNodes[0]).remove();
+                }else{
+                    var _firstList = angular.element('<'+_parent[0].tagName+'></'+_parent[0].tagName+'>');
+                    var _secondList = angular.element('<'+_parent[0].tagName+'></'+_parent[0].tagName+'>');
+                    for(i = 0; i < _preLis.length; i++) _firstList.append(angular.element(_preLis[i]));
+                    for(i = 0; i < _postLis.length; i++) _secondList.append(angular.element(_postLis[i]));
+                    _parent.after(_secondList);
+                    _parent.after(newElem);
+                    _parent.after(_firstList);
+                    _parent.remove();
+                }
+                taSelection.setSelectionToElementEnd(newElem[0]);
+            }
+            // clear out all class attributes. These do not seem to be cleared via removeFormat
+            var $editor = this.$editor();
+            var recursiveRemoveClass = function(node){
+                node = angular.element(node);
+                if(node[0] !== $editor.displayElements.text[0]) node.removeAttr('class');
+                angular.forEach(node.children(), recursiveRemoveClass);
+            };
+            angular.forEach(possibleNodes, recursiveRemoveClass);
+            // check if in list. If not in list then use formatBlock option
+            if(possibleNodes[0].tagName.toLowerCase() !== 'li' &&
+                possibleNodes[0].tagName.toLowerCase() !== 'ol' &&
+                possibleNodes[0].tagName.toLowerCase() !== 'ul') this.$editor().wrapSelection("formatBlock", "default");
+            restoreSelection();
+        }
+    });
+
+    taRegisterTool('h1', {
+        tab : 'text',
+        iconclass: 'h1',
+        tooltiptext: taTranslations.h1.tooltip,
+        class: 'editor_font_size',
+        action: function(){
+            return this.$editor().wrapSelection("fontSize", "6");
+        }
+    });
+    taRegisterTool('h2', {
+        tab : 'text',
+        iconclass: 'h2',
+        tooltiptext: taTranslations.h2.tooltip,
+        class: 'editor_font_size',
+        action: function(){
+            return this.$editor().wrapSelection("fontSize", "5");
+        }
+    });
+    taRegisterTool('h3', {
+        tab : 'text',
+        iconclass: 'h3',
+        tooltiptext: taTranslations.h3.tooltip,
+        class: 'editor_font_size',
+        action: function(){
+            return this.$editor().wrapSelection("fontSize", "3");
+        }
+    });
+    taRegisterTool('ul', {
+        iconclass: 'ul',
+        tab : 'alignment',
+        tooltiptext: taTranslations.ul.tooltip,
+        action: function(){
+            return this.$editor().wrapSelection("insertUnorderedList", null);
+        },
+        activeState: function(){ return this.$editor().queryCommandState('insertUnorderedList'); }
+    });
+    taRegisterTool('ol', {
+        iconclass: 'ol',
+        tab : 'alignment',
+        tooltiptext: taTranslations.ol.tooltip,
+        action: function(){
+            return this.$editor().wrapSelection("insertOrderedList", null);
+        },
+        activeState: function(){ return this.$editor().queryCommandState('insertOrderedList'); }
+    });
+    taRegisterTool('justifyLeft', {
+        iconclass: 'align-left',
+        tab : 'alignment',
+        tooltiptext: taTranslations.justifyLeft.tooltip,
+        class: 'alignment_align',
+        action: function(){
+            return this.$editor().wrapSelection("justifyLeft", null);
+        },
+        activeState: function(commonElement){
+            var result = false;
+            if(commonElement) result =
+                commonElement.css('text-align') === 'left' ||
+                commonElement.attr('align') === 'left' ||
+                (
+                commonElement.css('text-align') !== 'right' &&
+                commonElement.css('text-align') !== 'center' &&
+                commonElement.css('text-align') !== 'justify' &&
+                !this.$editor().queryCommandState('justifyRight') &&
+                !this.$editor().queryCommandState('justifyCenter')
+                ) && !this.$editor().queryCommandState('justifyFull');
+            result = result || this.$editor().queryCommandState('justifyLeft');
+            return result;
+        }
+    });
+    taRegisterTool('justifyRight', {
+        iconclass: 'align-right',
+        tab : 'alignment',
+        class: 'alignment_align',
+        tooltiptext: taTranslations.justifyRight.tooltip,
+        action: function(){
+            return this.$editor().wrapSelection("justifyRight", null);
+        },
+        activeState: function(commonElement){
+            var result = false;
+            if(commonElement) result = commonElement.css('text-align') === 'right';
+            result = result || this.$editor().queryCommandState('justifyRight');
+            return result;
+        }
+    });
+    taRegisterTool('justifyCenter', {
+        iconclass: 'align-center',
+        tab : 'alignment',
+        class: 'alignment_align',
+        tooltiptext: taTranslations.justifyCenter.tooltip,
+        action: function(){
+            return this.$editor().wrapSelection("justifyCenter", null);
+        },
+        activeState: function(commonElement){
+            var result = false;
+            if(commonElement) result = commonElement.css('text-align') === 'center';
+            result = result || this.$editor().queryCommandState('justifyCenter');
+            return result;
+        }
+    });
+    taRegisterTool('indent', {
+        iconclass: 'indent',
+        tab : 'alignment',
+        class: 'in_outdent',
+        tooltiptext: taTranslations.indent.tooltip,
+        action: function(){
+            return this.$editor().wrapSelection("indent", null);
+        },
+        activeState: function(){
+            return this.$editor().queryFormatBlockState('blockquote');
+        }
+    });
+    taRegisterTool('outdent', {
+        iconclass: 'outdent',
+        tab : 'alignment',
+        class: 'in_outdent',
+        tooltiptext: taTranslations.outdent.tooltip,
+        action: function(){
+            return this.$editor().wrapSelection("outdent", null);
+        },
+        activeState: function(){
+            return false;
+        }
+    });
+    var insertLink = function () {
+        console.log('OK!!!');
+    };
+    taRegisterTool('linkForm', {
+        tab : 'link',
+        class: 'link_form',
+        display: '<div>' +
+                    '<input placeholder="Вставьте сюда адрес сайта" class="input_e_url" type="url">' +
+                    '<div class="orange_border"></div>' +
+                    '<div class="link_ok"></div>' +
+                    '<div class="link_cancel"></div>' +
+                 '</div>',
+        action: function(deferred, restoreSelection){
+            /*if(!this.$element.find('.input_e_url').hasClass('focussed')) {
+
+            }*/
+            var self = this;
+            this.$editor().displayElements.text.blur();
+            var input = this.$element.children();
+            input[0].focus();
+            angular.element(input).on('focus', function (e) {
+                angular.element(this).addClass('focussed');
+            });
+            angular.element(input).on('blur', function (e) {
+                angular.element(this).removeClass('focussed');
+            });
+
+            angular.element('.link_ok').on('click', function (e) {
+                var urlLink = angular.element('.input_e_url').val();
+                self.$editor().wrapSelection('createLink', urlLink, true);
+                e.preventDefault();
+                e.stopPropagation();
+            });
+        },
+        activeState: function(commonElement){
+            if(commonElement) return commonElement[0].tagName === 'A';
+            return false;
+        },
+        onElementSelect: {
+            element: 'a',
+            action: function(event, $element, editorScope){
+                console.log('editorScope: ', editorScope);
+                // setup the editor toolbar
+                // Credit to the work at http://hackerwins.github.io/summernote/ for this editbar logic
+                event.preventDefault();
+                editorScope.displayElements.popover.css('width', '435px');
+                var container = editorScope.displayElements.popoverContainer;
+                //console.log('this is container: ', container);
+                container.empty();
+                container.css('line-height', '28px');
+                var link = angular.element('<a href="' + $element.attr('href') + '" target="_blank">' + $element.attr('href') + '</a>');
+                link.css({
+                    'display': 'inline-block',
+                    'max-width': '200px',
+                    'overflow': 'hidden',
+                    'text-overflow': 'ellipsis',
+                    'white-space': 'nowrap',
+                    'vertical-align': 'middle'
+                });
+                container.append(link);
+                var buttonGroup = angular.element('<div class="btn-group pull-right">');
+                var reLinkButton = angular.element('<button type="button" class="btn btn-default btn-sm btn-small" tabindex="-1" unselectable="on"><i class="fa fa-edit icon-edit"></i></button>');
+                reLinkButton.on('click', function(event){
+                    event.preventDefault();
+                    var urlLink = $window.prompt(taTranslations.insertLink.dialogPrompt, $element.attr('href'));
+                    if(urlLink && urlLink !== '' && urlLink !== 'http://'){
+                        $element.attr('href', urlLink);
+                        editorScope.updateTaBindtaTextElement();
+                    }
+                    editorScope.hidePopover();
+                });
+                buttonGroup.append(reLinkButton);
+                var langTitle = editorScope.$parent.openInNewWindow;
+                var unLinkButton = angular.element('<button type="button" class="btn btn-default btn-sm btn-small" tabindex="-1" unselectable="on"><i class="fa fa-unlink icon-unlink"></i></button>');
+                // directly before this click event is fired a digest is fired off whereby the reference to $element is orphaned off
+                unLinkButton.on('click', function(event){
+                    event.preventDefault();
+                    $element.replaceWith($element.contents());
+                    editorScope.updateTaBindtaTextElement();
+                    editorScope.hidePopover();
+                });
+                buttonGroup.append(unLinkButton);
+
+                var targetToggle = angular.element('<button type="button" class="btn btn-default btn-sm btn-small" tabindex="-1" unselectable="on">' + langTitle + '</button>');
+                if($element.attr('target') === '_blank'){
+                    targetToggle.addClass('active');
+                }
+                targetToggle.on('click', function(event){
+                    event.preventDefault();
+                    $element.attr('target', ($element.attr('target') === '_blank') ? '' : '_blank');
+                    targetToggle.toggleClass('active');
+                    editorScope.updateTaBindtaTextElement();
+                });
+                buttonGroup.append(targetToggle);
+                container.append(buttonGroup);
+                editorScope.showPopover($element);
+            }
+        }
     });
 }]);

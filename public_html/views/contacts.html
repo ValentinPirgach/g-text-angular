@@ -1,0 +1,10 @@
+<div ng-controller="contactsCtrl">
+    <div class="c_scroll_wrapper">
+        <div contacts-scroll>
+            <div class="contact" ng-repeat="c in contacts">
+                <div class="c_name">{{c.name}}</div>
+                <div class="c_remind">{{c.rand_num}}</div>
+            </div>
+        </div>
+    </div>
+</div>

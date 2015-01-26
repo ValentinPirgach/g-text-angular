@@ -1,25 +1,9 @@
-.g_editor {
-    background: #fff;
-}
-.editor_button {
-    background: none;
-    width: 34px;
-    height: 34px;
-}
-.g_toolbar {
-    background: #fff;
-    position: relative;
-    max-height: 70px;
-    min-height: 35px;
-}
-.g_toolbar button {
-    background: none;
-    border: none;
-}
+
 .undo, .redo, .bold, .italic, .underline, .smiles, .unformat, .alignment, .hyperlinks, .text, .images, .contentscreen, .h3, .h2, .h1, .ul, .ol, .align-left, .align-center, .align-right, .indent, .outdent, .color, .font-color-indicator, .background-color-indicator, .increase-editor-height, .decrease-editor-height, .increase-font-size, .decrease-font-size {
     background: url('../images/sprites_24_p2.png') no-repeat;
     width: 24px;
     height: 24px !important;
+    margin: 0 6px;
 }
 
 .undo {
@@ -48,11 +32,11 @@
     background-position: 0px -912px;
 }
 
-.bold.active {
+.editor_button.active .bold {
     background-position: 0px -936px;
 }
 
-.bold.active:hover {
+.editor_button.active .bold:hover {
     background-position: 0px -960px;
 }
 
@@ -64,11 +48,11 @@
     background-position: 0px -1032px;
 }
 
-.italic.active {
+.editor_button.active .italic {
     background-position: 0px -1056px;
 }
 
-.italic.active:hover {
+.editor_button.active .italic:hover {
     background-position: 0px -1080px;
 }
 
@@ -80,11 +64,11 @@
     background-position: 0px -1152px;
 }
 
-.underline.active {
+.editor_button.active .underline{
     background-position: 0px -1176px;
 }
 
-.underline.active:hover {
+.editor_button.active.underline:hover {
     background-position: 0px -1200px;
 }
 
@@ -96,11 +80,11 @@
     background-position: 0px -1272px;
 }
 
-.h3.active {
+.editor_button.active .h3 {
     background-position: 0px -1296px;
 }
 
-.h3.active:hover {
+.editor_button.active .h3:hover {
     background-position: 0px -1320px;
 }
 
@@ -112,11 +96,11 @@
     background-position: 0px -1392px;
 }
 
-.h2.active {
+.editor_button.active .h2 {
     background-position: 0px -1416px;
 }
 
-.h2.active:hover {
+.editor_button.active .h2:hover {
     background-position: 0px -1440px;
 }
 
@@ -128,11 +112,11 @@
     background-position: 0px -1512px;
 }
 
-.h1.active {
+.editor_button.active .h1 {
     background-position: 0px -1536px;
 }
 
-.h1.active:hover {
+.editor_button.active .h1:hover {
     background-position: 0px -1560px;
 }
 
@@ -144,11 +128,11 @@
     background-position: 0px -2376px;
 }
 
-.ul.active {
+.editor_button.active .ul {
     background-position: 0px -2400px;
 }
 
-.ul.active:hover {
+.editor_button.active .ul:hover {
     background-position: 0px -2424px;
 }
 
@@ -160,16 +144,20 @@
     background-position: 0px -2256px;
 }
 
-.ol.active {
+.editor_button.active .ol {
     background-position: 0px -2280px;
 }
 
-.ol.active:hover {
+.editor_button.active .ol:hover {
     background-position: 0px -2304px;
 }
-
+/*TODO do with hover and active*/
 .unformat {
     background-position: 0px -2160px;
+}
+
+.unformat:hover {
+    background-position: 0px -2184px;
 }
 
 
@@ -181,7 +169,7 @@
     background-position: 0px -192px;
 }
 
-.smiles.active {
+.editor_button.active .smiles {
     background-position: 0px -216px;
 }
 
@@ -193,7 +181,7 @@
     background-position: 0px -288px;
 }
 
-.text.active {
+.editor_button.active .text {
     background-position: 0px -312px;
 }
 
@@ -205,7 +193,7 @@
     background-position: 0px -384px;
 }
 
-.alignment.active {
+.editor_button.active .alignment {
     background-position: 0px -407px;
 }
 
@@ -217,7 +205,7 @@
     background-position: 0px -480px;
 }
 
-.hyperlinks.active {
+.editor_button.active .hyperlinks {
     background-position: 0px -504px;
 }
 
@@ -229,7 +217,7 @@
     background-position: 0px -576px;
 }
 
-.images.active {
+.editor_button.active .images {
     background-position: 0px -600px;
 }
 
@@ -241,11 +229,11 @@
     background-position: 0px -672px;
 }
 
-.contentscreen.active {
+.editor_button.active .contentscreen{
     background-position: 0px -840px;
 }
 
-.contentscreen.active:hover {
+.editor_button.active .contentscreen:hover {
     background-position: 0px -864px;
 }
 .increase-editor-height {
@@ -263,23 +251,53 @@
 .decrease-editor-height:hover {
     background-position: 0px -816px;
 }
+.align-left {
+    background-position: 0px -2472px;
+}
 
-.toolbar_group {
-    position: absolute;
+.align-left:hover {
+    background-position: 0px -2496px;
 }
-.toolbar_group:nth-child(1) {
-    left: 0;
+
+.editor_button.active .align-left {
+    background-position: 0px -2520px;
 }
-.toolbar_group:nth-child(2) {
-    left: 50%;
-    width: 180px;
-    margin-left: -90px;
+
+.align-center {
+    background-position: 0px -2664px;
 }
-.toolbar_group:nth-child(3) {
-    right: 0;
+
+.align-center:hover {
+    background-position: 0px -2688px;
 }
-.editor_button.active {
-    background: #eaf1fb;
-    border: 1px #eceff6 solid;
-    border-bottom: none;
+
+.editor_button.active .align-center {
+    background-position: 0px -2712px;
+}
+
+.align-right {
+    background-position: 0px -2568px;
+}
+
+.align-right:hover {
+    background-position: 0px -2592px;
+}
+.editor_button.active .align-right {
+    background-position: 0px -2616px;
+}
+
+.indent {
+    background-position: 0px -2928px;
+}
+
+.indent:hover {
+    background-position: 0px -2952px;
+}
+
+.outdent {
+    background-position: 0px -2856px;
+}
+
+.outdent:hover {
+    background-position: 0px -2880px;
 }

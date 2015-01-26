@@ -2361,12 +2361,20 @@ textAngular.directive('textAngularToolbar', [
 					else element.removeClass(scope.classes.focussed);
 				});
 
+                scope.$watch('currentTab', function(n, prevTab){
+                    if(scope.currentTab) element.addClass(scope.classes.tab_active);
+                    else element.removeClass(scope.classes.tab_active);
+
+                    element.removeClass('active_tab_'+prevTab);
+                    if(scope.currentTab) element.addClass('active_tab_'+scope.currentTab);
+                });
+
                 /**
                  * function that changed tabs
                  * created by: valentin_pirgach / 21-01-15
                  **/
                 scope.currentTab = '';
-                scope.changeTab = function (tab, element) {
+                scope.changeTab = function (tab) {
                     if(scope.currentTab == tab) {
                         scope.currentTab = '';
                     }
